@@ -1,0 +1,72 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Set;
+
+public class Document implements Comparable<Document> {
+	
+	private HashMap<String, Integer> termFrequency;
+	
+		private String filename;
+
+	private Scanner in;
+	
+		public Document(String filename) {
+		this.filename = filename;
+		termFrequency = new HashMap<String, Integer>();
+		
+		readFileAndPreProcess();
+	}
+	
+		private void readFileAndPreProcess() {
+		try {
+			in = new Scanner(new File(filename));
+			System.out.println("Reading file: " + filename + " and preprocessing");
+			
+			while (in.hasNext()) {
+				String nextWord = in.next();
+				
+				String filteredWord = nextWord.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+				
+				if (!(filteredWord.equalsIgnoreCase(""))) {
+					if (termFrequency.containsKey(filteredWord)) {
+						int oldCount = termFrequency.get(filteredWord);
+						termFrequency.put(filteredWord, ++oldCount);
+					} else {
+						termFrequency.put(filteredWord, 1);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+		public double getTermFrequency(String word) {
+		if (termFrequency.containsKey(word)) {
+			return termFrequency.get(word);
+		} else {
+			return 0;
+		}
+	}
+	
+	
+	public Set<String> getTermList() {
+		return termFrequency.keySet();
+	}
+
+	
+	public int compareTo(Document other) {
+		return filename.compareTo(other.getFileName());
+	}
+
+	
+	private String getFileName() {
+		return filename;
+	}
+	
+		public String toString() {
+		return filename;
+	}
+}

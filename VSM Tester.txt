@@ -1,0 +1,93 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
+
+public class VectorSpaceModelTester {
+
+	private static BufferedReader br;
+	private static BufferedReader r;
+
+	public static void main(String[] args) throws IOException {
+		
+		Document query = new Document("question.txt");
+		Document d1 = new Document("dataset2.txt");
+		Document d2 = new Document("dataset3.txt");
+		Document d3 = new Document("dataset4.txt");
+		Document d4 = new Document("dataset5.txt");
+		Document d5 = new Document("dataset-alice.txt");
+		Document d6 = new Document("dataset-finn.txt");
+		Document d7 = new Document("dataset-les.txt");
+		Document d8 = new Document("dataset-pride.txt");
+		Document d9 = new Document("dataset-tom.txt");
+
+		ArrayList<Document> documents = new ArrayList<Document>();
+		documents.add(query);
+		documents.add(d1);
+		documents.add(d2);
+		documents.add(d3);
+		documents.add(d4);
+		documents.add(d5);
+		documents.add(d6);
+		documents.add(d7);
+		documents.add(d8);
+		documents.add(d9);
+		
+		Corpus corpus = new Corpus(documents);
+		
+		VectorSpaceModel vectorSpace = new VectorSpaceModel(corpus);
+		
+		for (int i = 0; i < documents.size(); i++) {
+			for (int j = i + 1; j < documents.size(); j++) {
+				Document doc1 = documents.get(i);
+				Document doc2 = documents.get(j);
+				System.out.println("\nComparing " + doc1 + " and " +  doc2);
+				System.out.println(vectorSpace.cosineSimilarity(doc1, doc2));
+			}
+		}
+		
+
+		for(int i = 1; i < documents.size(); i++) {
+			Document doc = documents.get(i);
+			System.out.println("\nComparing to " + doc);
+			System.out.println(vectorSpace.cosineSimilarity(query, doc));
+		}
+		
+		ArrayList<String> list = new ArrayList<String>();
+	       try
+	       {
+	       br = new BufferedReader(new FileReader( "dataset1.txt"));
+	         r = new BufferedReader(new FileReader( "dataset2.txt"));
+	            String s1 =null;
+	            String s2 = null;
+
+	                         while ((s1 = br.readLine()) != null)
+	                         {                         
+	                                        list.add(s1);        
+	                         }
+	                         while((s2 = r.readLine()) != null)
+	                         {    
+	                                        list.add(s2);    
+	                         } 
+	       }
+	        catch (IOException e)
+	          {
+	            e.printStackTrace();
+	          }
+
+	           BufferedWriter writer=null;
+	           writer = new BufferedWriter(new FileWriter("output.txt"));
+	            String listWord;              
+	                   for (int i = 0; i< list.size(); i++)
+	                  {
+	                        listWord = list.get(i);
+	                       writer.write(listWord);
+	                       writer.write("\n");
+	                  }
+	                           System.out.println("DATASET processed has been copied");
+	                           writer.close();    
+	        }
+}
